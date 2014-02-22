@@ -16,6 +16,7 @@
 
 #undef __OUTPUT_CODE_H__
 #include "output_code.h"
+#include "../ttt_game/ttt_str_code.h"
 
 #undef BEGIN_ENUM
 #undef ENUM
@@ -29,6 +30,7 @@
 
 #define ENTER_PLAYER_NAME "Enter %s's new name\n"
 #define ENTER_UNKNOWN_VALUE "Error in menu, item is unknown\n"
+#define ENTER_COORDINATE "Enter %s value\n"
 
 static menu_list_t const *cur_menu;
 
@@ -109,11 +111,46 @@ void show_menu(menu_list_t const *list) {
 }
 
 void show_field(uint8_t **field, point_t const *size) {
-   printf("under constraction\n");
+   char output[3];
+   char *delimeter;
+   int32_t i,j;
+
+   delimeter = (char *) malloc(size->x * 2 * sizeof(char) + 2);
+   for (i = 0; i < size->x * 2 - 1; i++)
+      delimeter[i] = '-';
+   delimeter[i] = '\n';
+   delimeter[i + 1] = '\0';
+
+   system("clear");
+   for (i = 0; i < size->y; i++) {
+      for (j = 0; j < size->x; j++) {
+         snprintf(output, 3, "%s%c", ttt_code_table[field[i][j]],
+            j == size->x - 1 ? '\n' : '|');
+         printf("%s", output);
+      }
+      if (i != size->y - 1)
+         printf("%s", delimeter);
+   }
+   free(delimeter);
 }
 
 void show_result(game_status_t state, player_ent_t const *player) {
-   printf("under constraction\n");
+   char out_msg[MAX_OUTPUT_BUF_LEN];
+
+   if (state != GS_DRAW) {
+      char win_msg[MAX_OUTPUT_BUF_LEN];
+
+      snprintf(win_msg, MAX_OUTPUT_BUF_LEN, output_code_table[PLAYER_WINS],
+         player->name);
+      snprintf(out_msg, MAX_OUTPUT_BUF_LEN, output_code_table[END_GAME],
+         win_msg);
+   }
+   else {
+      snprintf(out_msg, MAX_OUTPUT_BUF_LEN, output_code_table[END_GAME],
+         output_code_table[DRAW_MSG]);
+   }
+   printf("%s\n", out_msg);
+   getchar();
 }
 
 uint8_t get_menu_input() {
@@ -146,6 +183,9 @@ void get_string_input(menu_item_t const *menu, char *message) {
 }
 
 void get_player_input(point_t *input, player_ent_t const *player) {
-   input->x = 0;
-   input->y = 0;
+   printf("%s's turn\n", player->name);
+   printf(ENTER_COORDINATE, "number of line");
+   input->y = get_ushort_from_input() - 1;
+   printf(ENTER_COORDINATE, "number of column");
+   input->x = get_ushort_from_input() - 1;
 }

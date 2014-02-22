@@ -1,10 +1,6 @@
 #include "callbacks.h"
 #include "../console_io/console_io.h"
-
-void get_field_size(point_t *size);
-void fill_field(uint8_t **field);
-uint8_t check_and_apply_move(uint8_t turn, void *move);
-uint8_t check_end_conditions();
+#include "../ttt_game/ttt_rule.h"
 
 io_func_t io_func = {
    .get_code_str = get_code_str,
