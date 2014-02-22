@@ -6,8 +6,8 @@
 #define TRUE 1
 #define FALSE 0
 
-#define PLAYER1_TURN 1
-#define PLAYER2_TURN 2
+#define PLAYER1 0
+#define PLAYER2 1
 
 #define MAX_OUTPUT_BUF_LEN 256
 
@@ -28,15 +28,16 @@ typedef enum {
 
 typedef struct menu_item {
    uint8_t id;
-   char *custom_title;
+   const char *(* get_title)();
    menu_item_type_t type;
-   void (* pre_action)();
-   void (* action)(struct menu_item *);
+   void (* action)(struct menu_item const *);
    void *data;
 } menu_item_t;
 
 typedef struct menu_list {
-   int32_t size;
+   uint8_t size;
+   uint8_t action_item_num;
+   void (* configure_settings)();
    menu_item_t menu[];
 } menu_list_t;
 
@@ -51,9 +52,9 @@ typedef struct {
 } ai_data_t;
 
 typedef struct player_ent {
-   struct player_func_list *input;
+   const struct player_func_list *func_list;
    char name[MAX_OUTPUT_BUF_LEN];
-   ai_data_t *ai_ctx;
+   void *player_ctx;
 } player_ent_t;
 
 #endif

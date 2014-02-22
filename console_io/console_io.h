@@ -1,17 +1,16 @@
 #ifndef __CONSOLE_IO_H__
 #define __CONSOLE_IO_H__
 
-#include "../inc/types.h"
-#include <stdio.h>
+#include "types.h"
 
-void show_field(uint8_t **field, point_t *size) {
-   printf("under constraction\n");
-}
-void show_result(game_status_t state, player_ent_t *player) {
-   printf("under constraction\n");
-}
+char const * get_code_str(uint8_t code);
 
-void get_player_input(point_t *input, player_ent_t *player) { input->x = 0;
-   input->y = 0; }
+void show_menu(menu_list_t const *list);
+void show_field(uint8_t **field, point_t const *size);
+void show_result(game_status_t state, player_ent_t const *player);
+
+uint8_t get_menu_input();
+void get_string_input(menu_item_t const *menu, char *input);
+void get_player_input(point_t *input, player_ent_t const *player);
 
 #endif
