@@ -16,7 +16,7 @@
 
 #undef __OUTPUT_CODE_H__
 #include "output_code.h"
-#include "../ttt_game/ttt_str_code.h"
+#include "../ttt_rule/ttt_str_code.h"
 
 #undef BEGIN_ENUM
 #undef ENUM

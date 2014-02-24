@@ -3,7 +3,7 @@
 #include "console_io/console_io.h"
 #include "menu_engine.h"
 #include "global_settings.h"
-#include "ttt_game/ttt_rule.h"
+#include "ttt_rule/ttt_rule.h"
 #include "output_code.h"
 
 #define GET_TURN(player) (player == g_player[0] ? PLAYER1 : PLAYER2)

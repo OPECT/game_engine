@@ -1,11 +1,8 @@
 #include "output_code.h"
-#include "callback_types.h"
+#include "callbacks.h"
 #include "global_settings.h"
 
-#include "ttt_game/tic_tac_toe_menu.h"
-
-extern io_func_t io_func;
-extern player_func_list_t player_callbacks;
+#include "ttt_rule/tic_tac_toe_menu.h"
 
 static uint8_t is_exit;
 static uint8_t start_game;

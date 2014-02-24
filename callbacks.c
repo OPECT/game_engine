@@ -1,6 +1,6 @@
 #include "callbacks.h"
 #include "../console_io/console_io.h"
-#include "../ttt_game/ttt_rule.h"
+#include "../ttt_rule/ttt_rule.h"
 
 io_func_t io_func = {
    .get_code_str = get_code_str,
