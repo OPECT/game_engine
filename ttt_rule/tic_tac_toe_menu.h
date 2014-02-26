@@ -5,10 +5,12 @@
 #include "menu_engine.h"
 #include <stdio.h>
 
-START_MENU(ai_menu, NULL)
-TEXT_ITEM(NOT_READY),
+START_MENU(ai_menu, set_computer_oponent_mode)
+EDITABLE_ITEM(DEFAULT_PLAYER_NAME1, apply_player_name, get_player1_name,
+   (void *) PLAYER1),
+ACTION_ITEM(START_GAME, simple_start_game, NULL),
 SIMPLE_ITEM(BACK)
-END_MENU(ai_menu, 2, 1)
+END_MENU(ai_menu, 3, 3)
 
 START_MENU(network_menu, NULL)
 TEXT_ITEM(NOT_READY),

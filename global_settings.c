@@ -5,6 +5,8 @@ player_ent_t player_ent1;
 player_ent_t player_ent2;
 player_ent_t *g_player[2];
 
+ai_data_t g_ai_data;
+
 void set_players() {
    g_player[0] = &player_ent1;
    g_player[1] = &player_ent2;

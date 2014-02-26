@@ -23,6 +23,7 @@ typedef struct {
 typedef struct {
    void (* get_field_size)(point_t *);
    void (* fill_field)(uint8_t **);
+   uint8_t ** (* get_field)();
    uint8_t (* check_and_apply_move)(uint8_t, void *);
    uint8_t (* check_end_conditions)();
 } rule_func_t;

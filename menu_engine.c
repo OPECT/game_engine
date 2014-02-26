@@ -76,6 +76,22 @@ const char *get_player2_name() {
 }
 
 void set_hot_seat_mode() {
+   set_players();
+
    set_player_func_list(PLAYER1, &player_callbacks);
+   set_player_ctx(PLAYER1, NULL);
+
    set_player_func_list(PLAYER2, &player_callbacks);
+   set_player_ctx(PLAYER2, NULL);
+}
+
+void set_computer_oponent_mode() {
+   set_players();
+
+   set_player_func_list(PLAYER1, &player_callbacks);
+   set_player_ctx(PLAYER1, NULL);
+
+   set_player_func_list(PLAYER2, &ai_callbacks);
+   set_player_ctx(PLAYER2, (void *) &g_ai_data);
+   set_player_name(PLAYER2, io_func.get_code_str(DEFAULT_AI_NAME));
 }

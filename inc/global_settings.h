@@ -5,6 +5,7 @@
 #include "callback_types.h"
 
 extern player_ent_t *g_player[2];
+extern ai_data_t g_ai_data;
 
 void set_players();
 void switch_players();

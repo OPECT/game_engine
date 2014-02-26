@@ -15,5 +15,6 @@ const char *get_player1_name();
 const char *get_player2_name();
 
 void set_hot_seat_mode();
+void set_computer_oponent_mode();
 
 #endif
