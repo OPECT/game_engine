@@ -26,11 +26,19 @@ typedef enum {
    GS_ONGOING
 } game_status_t;
 
+typedef enum {
+   MC_CONTINUE_GAME,
+   MC_START_NEW_GAME,
+   MC_MAIN_MENU,
+   MC_BACK,
+   MC_EXIT
+} menu_choice_action_t;
+
 typedef struct menu_item {
    uint8_t id;
    const char *(* get_title)();
    menu_item_type_t type;
-   void (* action)(struct menu_item const *);
+   uint8_t (* action)(struct menu_item const *);
    void *data;
 } menu_item_t;
 

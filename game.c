@@ -21,9 +21,10 @@ int main(void) {
    point_t field_size, input;
    game_status_t state;
    player_ent_t *cur_player;
+   uint8_t skip_finish_menu = FALSE, skip_start_menu = TRUE;
 
    global_init();
-   if (!show_start_menu())
+   if (show_start_menu() == MC_EXIT)
       return 0;
 
    rule_func.get_field_size(&field_size);
@@ -33,6 +34,10 @@ int main(void) {
       field[i] = (uint8_t *) calloc(field_size.x, sizeof(uint8_t));
 
    while (1) {
+      if (!skip_start_menu && show_start_menu() == MC_EXIT)
+         break;
+
+      skip_start_menu = TRUE;
       rule_func.fill_field(field);
       if (g_player[0]->func_list->init_player)
          g_player[0]->func_list->init_player(g_player[0]);
@@ -54,15 +59,22 @@ int main(void) {
             io_func.show_result(state, cur_player);
             break;
          }
-	 cur_player = g_player[GET_NEXT_TURN(cur_player)];
+         cur_player = g_player[GET_NEXT_TURN(cur_player)];
       }
       if (g_player[0]->func_list->clear_data)
          g_player[0]->func_list->clear_data(g_player[0]);
       if (g_player[1]->func_list->clear_data)
          g_player[1]->func_list->clear_data(g_player[1]);
 
-      if (!show_finish_menu())
-         break;
+      if (!skip_finish_menu) {
+         uint8_t choice = show_finish_menu();
+         if (choice == MC_EXIT)
+            break;
+         if (choice == MC_MAIN_MENU)
+            skip_start_menu = FALSE;
+      }
+      else
+         skip_finish_menu = FALSE;
    }
 
    for (int i = 0; i < field_size.y; i++)
