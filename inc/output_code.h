@@ -6,6 +6,7 @@
 BEGIN_ENUM(output_code)
 ENUM(EXIT, "exit"),
 ENUM(BACK, "back"),
+ENUM(RESUME, "resume"),
 ENUM(NOT_READY, "this section is not ready yet"),
 ENUM(AI, "computer"),
 ENUM(NETWORK, "network"),

@@ -36,8 +36,15 @@ END_MENU(main_menu, 4, 4)
 START_MENU(finish_menu, NULL)
 ACTION_ITEM(START_GAME, simple_start_game, NULL),
 ACTION_ITEM(SWITCH_START_GAME, switch_and_start_game, NULL),
-ACTION_ITEM(BACK_2_MAIN, show_simple_menu, &main_menu),
+ACTION_ITEM(BACK_2_MAIN, show_main_menu, NULL),
 SIMPLE_ITEM(EXIT)
+END_MENU(finish_menu, 4, 4)
+
+START_MENU(context_menu, NULL)
+ACTION_ITEM(RESUME, continue_game, NULL),
+ACTION_ITEM(START_GAME, simple_start_game, NULL),
+ACTION_ITEM(SWITCH_START_GAME, switch_and_start_game, NULL),
+ACTION_ITEM(BACK_2_MAIN, show_main_menu, NULL),
 END_MENU(finish_menu, 4, 4)
 
 #endif
