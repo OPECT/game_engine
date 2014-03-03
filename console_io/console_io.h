@@ -11,6 +11,6 @@ void show_result(game_status_t state, player_ent_t const *player);
 
 uint8_t get_menu_input();
 void get_string_input(menu_item_t const *menu, char *input);
-void get_player_input(point_t *input, player_ent_t const *player);
+int get_player_input(point_t *input, player_ent_t const *player);
 
 #endif

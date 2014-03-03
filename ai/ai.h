@@ -4,7 +4,7 @@
 #include "types.h"
 
 void init_data(player_ent_t *ctx);
-void make_move(point_t *move, player_ent_t const *ctx);
+int make_move(point_t *move, player_ent_t const *ctx);
 void clear_data(player_ent_t *ctx);
 
 #endif

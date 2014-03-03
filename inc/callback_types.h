@@ -5,7 +5,7 @@
 
 typedef struct player_func_list {
    void (* init_player)(player_ent_t *);
-   void (* get_player_input)(point_t *, player_ent_t const*);
+   int (* get_player_input)(point_t *, player_ent_t const*);
    void (* clear_data)(player_ent_t *);
 } player_func_list_t;
 

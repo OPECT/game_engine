@@ -48,7 +48,20 @@ int main(void) {
       cur_player = g_player[0];
 
       while(1) {
-         cur_player->func_list->get_player_input(&input, cur_player);
+         if (!cur_player->func_list->get_player_input(&input, cur_player)) {
+            uint8_t choice = show_context_menu();
+            if (choice == MC_CONTINUE_GAME) {
+               io_func.show_field(field, &field_size);
+               continue;
+            }
+            else {
+               skip_finish_menu = TRUE;
+               if (choice == MC_MAIN_MENU)
+                  skip_start_menu = FALSE;
+               break;
+            }
+
+         }
          if (!rule_func.check_and_apply_move(GET_TURN(cur_player),
             (void *) &input)) {
             continue;

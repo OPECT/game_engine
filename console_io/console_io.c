@@ -32,7 +32,10 @@
 #define ENTER_UNKNOWN_VALUE "Error in menu, item is unknown\n"
 #define ENTER_COORDINATE "Enter %s value\n"
 
+#define SKIP_SIGN 27
+
 static menu_list_t const *cur_menu;
+static uint8_t skip_sign;
 
 static void clear_input(char const *msg) {
    while (getchar() != '\n');
@@ -65,6 +68,10 @@ static uint8_t get_ushort_from_input() {
       if (!isdigit(ch)) {
          clear_input(WRONG_CHAR);
          choice = 0;
+         if (ch == SKIP_SIGN) {
+            skip_sign = TRUE;
+            return 0;
+         }
          continue;
       }
       if (choice * 10 + CHAR_TO_DIGIT(ch) > USHRT_MAX) {
@@ -159,7 +166,8 @@ uint8_t get_menu_input() {
 
    printf("%s", INTRO);
    choice = get_ushort_from_input();
-   while (!is_input_correct(choice)) {
+   while (!is_input_correct(choice) || skip_sign) {
+      skip_sign = FALSE;
       choice = get_ushort_from_input();
    }
 
@@ -182,10 +190,19 @@ void get_string_input(menu_item_t const *menu, char *message) {
       message[strlen(message) - 1] = '\0';
 }
 
-void get_player_input(point_t *input, player_ent_t const *player) {
+int get_player_input(point_t *input, player_ent_t const *player) {
    printf("%s's turn\n", player->name);
    printf(ENTER_COORDINATE, "number of line");
    input->y = get_ushort_from_input() - 1;
+   if (skip_sign) {
+      skip_sign = FALSE;
+      return FALSE;
+   }
    printf(ENTER_COORDINATE, "number of column");
    input->x = get_ushort_from_input() - 1;
+   if (skip_sign) {
+      skip_sign = FALSE;
+      return FALSE;
+   }
+   return TRUE;
 }

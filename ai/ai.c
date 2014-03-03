@@ -187,7 +187,7 @@ void init_data(player_ent_t *ctx) {
    ai_ctx->own_fld = own_field;
 }
 
-void make_move(point_t *move, player_ent_t const *ctx) {
+int make_move(point_t *move, player_ent_t const *ctx) {
    point_t size, op_prev_move;
    uint8_t found_move = FALSE;
    ai_data_t *ai_ctx = (ai_data_t *) ctx->player_ctx;
@@ -219,6 +219,7 @@ void make_move(point_t *move, player_ent_t const *ctx) {
       recalculate_values((uint8_t const **) ai_ctx->own_fld, ai_ctx->marked_fld,
 	 move, TRUE);
    }
+   return TRUE;
 }
 
 void clear_data(player_ent_t *ctx) {
