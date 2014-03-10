@@ -5,6 +5,7 @@
 #include <ctype.h>
 #include "console_io.h"
 #include "output_code.h"
+#include "error.h"
 
 #undef BEGIN_ENUM
 #undef ENUM
@@ -57,7 +58,8 @@ static uint8_t choice2item(uint8_t choice) {
       if (cur_menu->menu[i].type != MENU_ITEM_TEXT)
          choice--;
    }
-   //XXX error case should be considered(choice != 0)
+   if (choice != 0)
+      set_error("menu items error", strlen("menu items error"));
    return i - 1;
 }
 
@@ -205,4 +207,9 @@ int get_player_input(point_t *input, player_ent_t const *player) {
       return FALSE;
    }
    return TRUE;
+}
+
+void show_error(char *msg) {
+   printf("\nERROR: %s\nPress any key to exit\n", msg);
+   getchar();
 }

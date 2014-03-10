@@ -5,6 +5,7 @@
 #include "global_settings.h"
 #include "ttt_rule/ttt_rule.h"
 #include "output_code.h"
+#include "error.h"
 
 #define GET_TURN(player) (player == g_player[0] ? PLAYER1 : PLAYER2)
 #define GET_NEXT_TURN(player) (player == g_player[0] ? PLAYER2 : PLAYER1)
@@ -24,6 +25,9 @@ int main(void) {
    uint8_t skip_finish_menu = FALSE, skip_start_menu = TRUE;
 
    global_init();
+   if (is_error())
+      exit(1);
+
    if (show_start_menu() == MC_EXIT)
       return 0;
 
@@ -46,6 +50,8 @@ int main(void) {
 
       io_func.show_field(field, &field_size);
       cur_player = g_player[0];
+      if (is_error())
+         goto exit;
 
       while(1) {
          if (!cur_player->func_list->get_player_input(&input, cur_player)) {
@@ -60,7 +66,8 @@ int main(void) {
                   skip_start_menu = FALSE;
                break;
             }
-
+            if (is_error())
+               goto exit;
          }
          if (!rule_func.check_and_apply_move(GET_TURN(cur_player),
             (void *) &input)) {
@@ -68,10 +75,13 @@ int main(void) {
          }
          io_func.show_field(field, &field_size);
          state = rule_func.check_end_conditions();
+
          if (state != GS_ONGOING) {
             io_func.show_result(state, cur_player);
             break;
          }
+         if (is_error())
+            goto exit;
          cur_player = g_player[GET_NEXT_TURN(cur_player)];
       }
       if (g_player[0]->func_list->clear_data)
@@ -81,6 +91,8 @@ int main(void) {
 
       if (!skip_finish_menu) {
          uint8_t choice = show_finish_menu();
+         if (is_error())
+            goto exit;         
          if (choice == MC_EXIT)
             break;
          if (choice == MC_MAIN_MENU)
@@ -88,6 +100,15 @@ int main(void) {
       }
       else
          skip_finish_menu = FALSE;
+   }
+
+exit:
+   if (is_error()) {
+      io_func.show_error(get_error());
+      if (g_player[0]->func_list->clear_data)
+         g_player[0]->func_list->clear_data(g_player[0]);
+      if (g_player[1]->func_list->clear_data)
+         g_player[1]->func_list->clear_data(g_player[1]);
    }
 
    for (int i = 0; i < field_size.y; i++)

@@ -9,7 +9,8 @@ io_func_t io_func = {
    .show_field = show_field,
    .show_result = show_result,
    .get_menu_input = get_menu_input,
-   .get_string_input = get_string_input
+   .get_string_input = get_string_input,
+   .show_error = show_error
 };
 
 rule_func_t rule_func = {

@@ -3,7 +3,7 @@ CLEAN_SUBDIR = $(patsubst %,%_clean,$(SUBDIRS))
 INC_DIR = inc
 CC = gcc
 CFLAGS = -I$(INC_DIR) -std=gnu99 -g
-OBJ = game.o menu_engine.o callbacks.o global_settings.o
+OBJ = game.o menu_engine.o callbacks.o global_settings.o error.o
 
 game_engine: $(OBJ) $(SUBDIRS)
 	 $(CC) $(CFLAGS) -o game_engine $(OBJ) $(foreach file,$(SUBDIRS),$(subst $(file),$(file)/$(file).o,$(file)))

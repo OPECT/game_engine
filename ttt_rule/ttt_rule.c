@@ -1,6 +1,7 @@
 #include "ttt_rule.h"
 #include "enum_macro.h"
 #include "ttt_str_code.h"
+#include "error.h"
 #include <stdio.h>
 
 #define WIDTH_SIZE 3
@@ -74,7 +75,8 @@ uint8_t check_end_conditions() {
                   GS_PLAYER2_VICTORY;
             }
             break;
-         default:;
+         default: set_error("rule error: wrong sign",
+            strlen("rule error: wrong sign"));
          }
       }
    }

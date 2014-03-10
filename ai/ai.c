@@ -6,6 +6,7 @@
 #include "../ttt_rule/ttt_str_code.h"
 #include "callbacks.h"
 #include "global_settings.h"
+#include "error.h"
 
 #define VALUE_2_NATIVE_SIGN 100
 #define VALUE_2_OPPOSITE_SIGN 75
@@ -140,10 +141,10 @@ static uint8_t recalculate_values(uint8_t const **field,
                VALUE_2_OPPOSITE_SIGN;
          }
          else if (!ai_turn) {
-	    if (CELL(values, (&target_cell)) > VALUE_NEW_OPPOSITE_SIGN)
-	       CELL(values, (&target_cell)) -= VALUE_NEW_OPPOSITE_SIGN;
-	    else
-	       CELL(values, (&target_cell)) = VALUE_MINIMUM_CELL_VALUE;
+            if (CELL(values, (&target_cell)) > VALUE_NEW_OPPOSITE_SIGN)
+               CELL(values, (&target_cell)) -= VALUE_NEW_OPPOSITE_SIGN;
+            else
+               CELL(values, (&target_cell)) = VALUE_MINIMUM_CELL_VALUE;
          }
          else {
 	    /* if third cell has opponent sign add less */
@@ -217,8 +218,11 @@ int make_move(point_t *move, player_ent_t const *ctx) {
    if (found_move) {
       CELL(ai_ctx->own_fld, move) = GET_MY_ITEMS_TYPE(ctx);
       recalculate_values((uint8_t const **) ai_ctx->own_fld, ai_ctx->marked_fld,
-	 move, TRUE);
+         move, TRUE);
    }
+   if (!found_move)
+      set_error("ai error, no move found", strlen("ai error, no move found"));
+
    return TRUE;
 }
 

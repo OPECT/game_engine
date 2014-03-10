@@ -13,4 +13,5 @@ uint8_t get_menu_input();
 void get_string_input(menu_item_t const *menu, char *input);
 int get_player_input(point_t *input, player_ent_t const *player);
 
+void show_error(char *msg);
 #endif

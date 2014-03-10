@@ -18,6 +18,8 @@ typedef struct {
 
    uint8_t (* get_menu_input)();
    void (* get_string_input)(menu_item_t const *, char *);
+
+   void (*show_error) (char *msg);
 } io_func_t;
 
 typedef struct {
