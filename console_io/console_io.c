@@ -3,7 +3,7 @@
 #include <string.h>
 #include <limits.h>
 #include <ctype.h>
-#include "console_io.h"
+#include "interface_io.h"
 #include "output_code.h"
 #include "error.h"
 
@@ -90,6 +90,10 @@ char const * get_code_str(uint8_t code) {
    return output_code_table[code];
 }
 
+uint8_t init_io() { return 0; }
+
+void clear_io() { }
+
 void show_menu(menu_list_t const *list) {
    uint8_t num = 1;
    char item_msg[MAX_OUTPUT_BUF_LEN];
@@ -143,7 +147,7 @@ void show_field(uint8_t **field, point_t const *size) {
    free(delimeter);
 }
 
-void show_result(game_status_t state, player_ent_t const *player) {
+void show_result(uint8_t state, player_ent_t const *player) {
    char out_msg[MAX_OUTPUT_BUF_LEN];
 
    if (state != GS_DRAW) {

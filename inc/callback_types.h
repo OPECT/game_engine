@@ -10,11 +10,13 @@ typedef struct player_func_list {
 } player_func_list_t;
 
 typedef struct {
+   uint8_t (* init_io)();
+   void (* clear_io)();
    char const * (* get_code_str)(uint8_t);
 
    void (* show_menu)(menu_list_t const *);
    void (* show_field)(uint8_t **, point_t const *);
-   void (* show_result)(game_status_t, player_ent_t const *);
+   void (* show_result)(uint8_t, player_ent_t const *);
 
    uint8_t (* get_menu_input)();
    void (* get_string_input)(menu_item_t const *, char *);

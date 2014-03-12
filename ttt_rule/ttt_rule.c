@@ -3,6 +3,7 @@
 #include "ttt_str_code.h"
 #include "error.h"
 #include <stdio.h>
+#include <string.h>
 
 #define WIDTH_SIZE 3
 #define HEIGHT_SIZE 3

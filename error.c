@@ -10,6 +10,10 @@ void set_error(char *msg, uint8_t len) {
       MAX_OUTPUT_BUF_LEN, "%s", msg);
 }
 
+void clear_error() {
+   error = FALSE;
+}
+
 uint8_t is_error() {
    return error;
 }

@@ -1,6 +1,10 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 #define TRUE 1
@@ -64,5 +68,9 @@ typedef struct player_ent {
    char name[MAX_OUTPUT_BUF_LEN];
    void *player_ctx;
 } player_ent_t;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

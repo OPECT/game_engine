@@ -1,12 +1,16 @@
-SUBDIRS = console_io ttt_rule ai
 CLEAN_SUBDIR = $(patsubst %,%_clean,$(SUBDIRS))
 INC_DIR = inc
-CC = gcc
-CFLAGS = -I$(INC_DIR) -std=gnu99 -g
+CPPC = g++
+CC = gcc -std=gnu99
+CFLAGS = -I$(INC_DIR) -g
+LIBS = -lSDL -lSDL_image -lSDL_ttf -lSDL_mixer
+
 OBJ = game.o menu_engine.o callbacks.o global_settings.o error.o
+SUBDIRS = ttt_rule ai
+SUBDIRS += sdl_io
 
 game_engine: $(OBJ) $(SUBDIRS)
-	 $(CC) $(CFLAGS) -o game_engine $(OBJ) $(foreach file,$(SUBDIRS),$(subst $(file),$(file)/$(file).o,$(file)))
+	 $(CPPC) $(CFLAGS) -o game_engine $(OBJ) $(foreach file,$(SUBDIRS),$(subst $(file),$(file)/$(file).o,$(file))) $(LIBS)
 
 $(OBJ): %.o: %.c
 	 $(CC) -c $(CFLAGS) $< -o $@

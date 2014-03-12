@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "callbacks.h"
-#include "console_io/console_io.h"
+#include "interface_io.h"
 #include "menu_engine.h"
 #include "global_settings.h"
 #include "ttt_rule/ttt_rule.h"
@@ -15,12 +15,13 @@ static void global_init() {
    set_players();
    set_player_name(PLAYER1, io_func.get_code_str(DEFAULT_PLAYER_NAME1));
    set_player_name(PLAYER2, io_func.get_code_str(DEFAULT_PLAYER_NAME2));
+   io_func.init_io();
 }
 
-int main(void) {
-   uint8_t **field;
+int main(int argc, char *argv[]) {
+   uint8_t **field = NULL;
    point_t field_size, input;
-   game_status_t state;
+   uint8_t state;
    player_ent_t *cur_player;
    uint8_t skip_finish_menu = FALSE, skip_start_menu = TRUE;
 
@@ -29,7 +30,7 @@ int main(void) {
       exit(1);
 
    if (show_start_menu() == MC_EXIT)
-      return 0;
+      goto exit;
 
    rule_func.get_field_size(&field_size);
 
@@ -110,8 +111,10 @@ exit:
       if (g_player[1]->func_list->clear_data)
          g_player[1]->func_list->clear_data(g_player[1]);
    }
-
-   for (int i = 0; i < field_size.y; i++)
-      free(field[i]);
-   free(field);
+   if (field) {
+      for (int i = 0; i < field_size.y; i++)
+         free(field[i]);
+      free(field);
+   }
+   io_func.clear_io();
 }

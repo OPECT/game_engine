@@ -1,6 +1,8 @@
 #include "output_code.h"
 #include "callbacks.h"
 #include "global_settings.h"
+#include "error.h"
+#include <string.h>
 
 #include "ttt_rule/tic_tac_toe_menu.h"
 
@@ -14,6 +16,10 @@ uint8_t show_simple_menu(menu_item_t const *ctx) {
    while (1) {
       io_func.show_menu(menu);
       input = io_func.get_menu_input();
+      if (is_error() && !strncmp(get_error(), "quit", 5)) {
+         clear_error();
+         return MC_EXIT;
+      }
 
       if (menu->menu[input].id == BACK)
          return MC_BACK;

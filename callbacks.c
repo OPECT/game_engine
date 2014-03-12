@@ -1,9 +1,11 @@
 #include "callbacks.h"
-#include "../console_io/console_io.h"
+#include "interface_io.h"
 #include "../ttt_rule/ttt_rule.h"
 #include "../ai/ai.h"
 
 io_func_t io_func = {
+   .init_io = init_io,
+   .clear_io = clear_io,
    .get_code_str = get_code_str,
    .show_menu = show_menu,
    .show_field = show_field,
