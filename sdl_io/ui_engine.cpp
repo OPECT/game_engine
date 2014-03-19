@@ -124,6 +124,31 @@ bool UI_engine::get_figure_idx(int32_t x, int32_t y, point_t *res) {
    return TRUE;
 }
 
+SDL_Surface *UI_engine::apply_font(string text, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect *clip) {
+   TTF_Font *small_font = NULL;
+   uint8_t fnt_sz = font_size, dcr = 10;
+   uint32_t offset = (SCREEN_WIDTH - source->w) / 2;
+
+   while (offset + source->w >= SCREEN_WIDTH) {
+      if (small_font)
+         TTF_CloseFont(small_font);
+      SDL_FreeSurface(source);
+      fnt_sz -= dcr;
+      small_font = TTF_OpenFont((res_folder + "Scrobbly.ttf").c_str(), fnt_sz);
+      if (small_font == NULL) {
+         TTF_CloseFont(small_font);
+         return false;
+      }
+      source = TTF_RenderText_Solid(small_font, text.c_str(), textColor);
+      offset = (SCREEN_WIDTH - source->w) / 2;
+   }
+
+   if (small_font)
+      TTF_CloseFont(small_font);
+   apply_surface(offset, y, source, destination, clip);
+   return source;
+}
+
 UI_engine::~UI_engine() {
    clean_up_data();
    close_sdl();
@@ -136,15 +161,17 @@ bool UI_engine::basic_loads() {
 
    font = TTF_OpenFont((res_folder + "Scrobbly.ttf").c_str(), font_size);
    if (font == NULL)
-      return false;    
+      return false;
 
    horiz_line = load_image("horizontal.png");
    vert_line = load_image("vertical.png");
+   main_diag_line = load_image("main_diag.png");
+   supl_diag_line = load_image("supl_diag.png");
    cross = load_image("X.png");
    nought = load_image("O.png");
 
-   figure_width = cross->w + (SCREEN_WIDTH - 3 * cross->w - 80) / 3;
-   figure_height = cross->h + (SCREEN_HEIGHT - 3 * cross->h - 30) / 3;
+   figure_width = cross->w + (SCREEN_WIDTH - 3 * cross->w - 2*100) / 3;
+   figure_height = cross->h + (SCREEN_HEIGHT - 3 * cross->h - 3*40) / 3;
    return true;
 }
 
@@ -157,18 +184,19 @@ void UI_engine::show_menu(vector<string> &list) {
    clear_items();
    apply_surface(0, 0, background, screen, NULL);
    for (vector<string>::iterator it = list.begin(); it != list.end(); it++, idx++) {
-      items.push_back(TTF_RenderText_Solid(font, (*it).c_str(), textColor));
-      if (items[idx] == NULL)
+      SDL_Surface *msg = TTF_RenderText_Solid(font, (*it).c_str(), textColor);
+      if (msg == NULL)
          throw new UI_engine_err("menu item error\n");
 
-      apply_surface((SCREEN_WIDTH - items[idx]->w) / 2, init_ver_offset + vert_offset * idx, items[idx], screen, NULL);
+      msg = apply_font(*it, init_ver_offset + vert_offset * idx, msg, screen, NULL);
+      items.push_back(msg);
    }
    if (SDL_Flip(screen) == -1)
       throw new UI_engine_err("show menu error\n");
 }
 
 void UI_engine::show_field(uint8_t **field, point_t const *size, vector<string> figures) {
-   uint8_t init_hor_offset = 80, init_vert_offset = 30;
+   uint8_t init_hor_offset = 150, init_vert_offset = 40;
    SDL_Surface *figure;
 
    apply_surface(0, 0, background, screen, NULL);
@@ -183,13 +211,40 @@ void UI_engine::show_field(uint8_t **field, point_t const *size, vector<string> 
          if (field[i][j] == 1 || field[i][j] == 2) {
             figure = field[i][j] == 1 ? cross : nought;
             apply_surface(j * figure_width + init_hor_offset,
-               i * figure_height + init_vert_offset, figure, screen, NULL);            
+               i * figure_height + init_vert_offset, figure, screen, NULL);
          }
       }
    }
 
    if (SDL_Flip(screen) == -1)
-      throw new UI_engine_err("show menu error\n");
+      throw new UI_engine_err("show field error\n");
+}
+
+void UI_engine::show_result(uint8_t state, player_ent_t const *player, winning_data_t *data) {
+   SDL_Event event;
+   uint16_t v_offset = (SCREEN_WIDTH - vert_line->w) / 4;
+   uint16_t h_offset = (SCREEN_HEIGHT - horiz_line->h) / 4;
+
+   if (data->start_point.x == data->end_point.x)
+      apply_surface(0, data->start_point.x * h_offset, horiz_line, screen, NULL);
+   else if (data->start_point.y == data->end_point.y)
+      apply_surface(data->start_point.y * v_offset, 0, vert_line, screen, NULL);
+   else if (data->start_point.x == data->start_point.y)
+      apply_surface(0, 0, main_diag_line, screen, NULL);
+   else if (data->start_point.x == data->end_point.y)
+      apply_surface(0, 0, supl_diag_line, screen, NULL);
+
+   if (SDL_Flip(screen) == -1)
+      throw new UI_engine_err("show result error\n");
+
+   while (TRUE) {
+      SDL_PollEvent(&event);
+      if (event.type == SDL_QUIT)
+         throw new UI_engine_err("quit");
+      else if (event.type == SDL_MOUSEBUTTONUP && event.button.button == SDL_BUTTON_LEFT) {
+         break;
+      }
+   }
 }
 
 uint8_t UI_engine::get_menu_input() {

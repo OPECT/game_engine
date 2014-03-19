@@ -35,7 +35,6 @@
 
 #define SKIP_SIGN 27
 
-static menu_list_t const *cur_menu;
 static uint8_t skip_sign;
 
 static void clear_input(char const *msg) {
@@ -44,14 +43,14 @@ static void clear_input(char const *msg) {
    printf("%s", msg);
 }
 
-static uint8_t is_input_correct(uint8_t input) {
+static uint8_t is_input_correct(uint8_t input, menu_list_t const *cur_menu) {
    if (input > 0 && input <= cur_menu->action_item_num)
       return TRUE;
    printf(ENTER_UNKNOWN_VALUE);
    return FALSE;
 }
 
-static uint8_t choice2item(uint8_t choice) {
+static uint8_t choice2item(uint8_t choice, menu_list_t const *cur_menu) {
    int i;
 
    for (i = 0; i < cur_menu->size && choice; i++) {
@@ -120,7 +119,6 @@ void show_menu(menu_list_t const *list) {
 
       printf("%s", item_msg);
    }
-   cur_menu = list;
 }
 
 void show_field(uint8_t **field, point_t const *size) {
@@ -166,18 +164,18 @@ void show_result(uint8_t state, player_ent_t const *player) {
    getchar();
 }
 
-uint8_t get_menu_input() {
+uint8_t get_menu_input(menu_list_t const *cur_menu) {
    uint8_t choice;
    uint8_t item;
 
    printf("%s", INTRO);
    choice = get_ushort_from_input();
-   while (!is_input_correct(choice) || skip_sign) {
+   while (!is_input_correct(choice, cur_menu) || skip_sign) {
       skip_sign = FALSE;
       choice = get_ushort_from_input();
    }
 
-   item = choice2item(choice);
+   item = choice2item(choice, cur_menu);
    return item;
 }
 

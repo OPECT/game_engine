@@ -20,7 +20,8 @@ rule_func_t rule_func = {
    .fill_field = fill_field,
    .get_field = get_field,
    .check_and_apply_move = check_and_apply_move,
-   .check_end_conditions = check_end_conditions
+   .check_end_conditions = check_end_conditions,
+   .get_winning_cond = get_winning_cond
 };
 
 player_func_list_t player_callbacks = { .get_player_input = get_player_input };

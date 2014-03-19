@@ -41,6 +41,7 @@
 #define ITEM_MASK 0x0003
 
 static FILE *f;
+static uint8_t is_data_init = FALSE;
 
 static uint8_t check_and_apply_last_move(uint8_t **old_field,
       uint8_t const **new_field, point_t *move, uint8_t item) {
@@ -166,6 +167,10 @@ void init_data(player_ent_t *ctx) {
    ai_data_t *ai_ctx = (ai_data_t *) ctx->player_ctx;
    uint8_t item = GET_MY_ITEMS_TYPE(ctx);
 
+   if (is_data_init)
+      return;
+   is_data_init = TRUE;
+
 #ifdef DEBUG_AI
    f = fopen("log.txt", "w");
 #endif
@@ -231,6 +236,10 @@ void clear_data(player_ent_t *ctx) {
    point_t size;
    ai_data_t *ai_ctx = (ai_data_t *) ctx->player_ctx;
 
+   if (!is_data_init)
+      return;
+
+   is_data_init = FALSE;
    rule_func.get_field_size(&size);
    for (int i = 0; i < size.y; i++) {
       free(ai_ctx->marked_fld[i]);

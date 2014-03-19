@@ -21,6 +21,7 @@ ENUM(END_GAME, "End of the game. %s\nPress any key to continue"),
 ENUM(DRAW_MSG, "This is draw."),
 ENUM(PLAYER_WINS, "The winner is %s."),
 ENUM(BACK_2_MAIN, "back to main"),
+ENUM(TITLE, "Tic Tac Toe"),
 ENUM(NONE, "")
 END_ENUM(output_code)
 

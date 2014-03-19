@@ -15,7 +15,8 @@ static void global_init() {
    set_players();
    set_player_name(PLAYER1, io_func.get_code_str(DEFAULT_PLAYER_NAME1));
    set_player_name(PLAYER2, io_func.get_code_str(DEFAULT_PLAYER_NAME2));
-   io_func.init_io();
+   if (io_func.init_io())
+      exit(2);
 }
 
 int main(int argc, char *argv[]) {
@@ -56,6 +57,9 @@ int main(int argc, char *argv[]) {
 
       while(1) {
          if (!cur_player->func_list->get_player_input(&input, cur_player)) {
+            if (is_error())
+               goto exit;
+
             uint8_t choice = show_context_menu();
             if (choice == MC_CONTINUE_GAME) {
                io_func.show_field(field, &field_size);
@@ -90,6 +94,9 @@ int main(int argc, char *argv[]) {
       if (g_player[1]->func_list->clear_data)
          g_player[1]->func_list->clear_data(g_player[1]);
 
+      if (is_error())
+         goto exit;
+
       if (!skip_finish_menu) {
          uint8_t choice = show_finish_menu();
          if (is_error())
@@ -105,7 +112,10 @@ int main(int argc, char *argv[]) {
 
 exit:
    if (is_error()) {
-      io_func.show_error(get_error());
+      if (!strncmp(get_error(), "quit", 5))
+         clear_error();
+      else
+         io_func.show_error(get_error());
       if (g_player[0]->func_list->clear_data)
          g_player[0]->func_list->clear_data(g_player[0]);
       if (g_player[1]->func_list->clear_data)

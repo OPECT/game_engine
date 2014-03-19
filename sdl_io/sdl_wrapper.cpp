@@ -2,10 +2,15 @@
 #include <vector>
 
 extern "C" {
+
    #include "error.h"
    #include "interface_io.h"
    #include "output_code.h"
    #include "stdio.h"
+   #include "callback_types.h"
+
+   extern rule_func_t rule_func;
+
    #undef BEGIN_ENUM
    #undef ENUM
    #undef END_ENUM
@@ -80,7 +85,18 @@ void show_field(uint8_t **field, point_t const *size) {
    ui_engine->show_field(field, size, figures);
 }
 
-void show_result(uint8_t state, player_ent_t const *player) {}
+void show_result(uint8_t state, player_ent_t const *player) {
+   winning_data_t data;
+
+   rule_func.get_winning_cond(&data);
+   try {
+      ui_engine->show_result(state, player, &data);
+   }
+   catch (UI_engine_err *e) {
+      set_error(e->get_message().c_str(), e->get_message().size());
+      delete e;
+   }
+}
 
 uint8_t get_menu_input(menu_list_t const *list) {
    uint8_t choice = 0;

@@ -18,7 +18,7 @@ typedef struct {
    void (* show_field)(uint8_t **, point_t const *);
    void (* show_result)(uint8_t, player_ent_t const *);
 
-   uint8_t (* get_menu_input)();
+   uint8_t (* get_menu_input)(menu_list_t const *);
    void (* get_string_input)(menu_item_t const *, char *);
 
    void (*show_error) (char *msg);
@@ -30,6 +30,7 @@ typedef struct {
    uint8_t ** (* get_field)();
    uint8_t (* check_and_apply_move)(uint8_t, void *);
    uint8_t (* check_end_conditions)();
+   uint8_t (* get_winning_cond)(void *);
 } rule_func_t;
 
 #endif

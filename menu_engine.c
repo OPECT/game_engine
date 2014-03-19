@@ -15,7 +15,7 @@ uint8_t show_simple_menu(menu_item_t const *ctx) {
 
    while (1) {
       io_func.show_menu(menu);
-      input = io_func.get_menu_input();
+      input = io_func.get_menu_input(menu);
       if (is_error() && !strncmp(get_error(), "quit", 5)) {
          clear_error();
          return MC_EXIT;

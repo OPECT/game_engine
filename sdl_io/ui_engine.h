@@ -36,6 +36,8 @@ private:
    SDL_Surface *background;
    SDL_Surface *horiz_line;
    SDL_Surface *vert_line;
+   SDL_Surface *main_diag_line;
+   SDL_Surface *supl_diag_line;
    SDL_Surface *cross;
    SDL_Surface *nought;
 
@@ -48,6 +50,7 @@ private:
    static void close_sdl();
 
    void apply_surface(int x, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect *clip);
+   SDL_Surface *apply_font(string text, int y, SDL_Surface* source, SDL_Surface* destination, SDL_Rect *clip);
    SDL_Surface *load_image(string filename);
    void clean_up_data();
    void clear_items();
@@ -62,6 +65,7 @@ public:
    bool basic_loads();
    void show_menu(vector<string> &list);
    void show_field(uint8_t **field, point_t const *size, vector<string> figures);
+   void show_result(uint8_t state, player_ent_t const *player, winning_data_t *);
    uint8_t get_menu_input();
    bool get_game_input(point_t *input);
 };

@@ -46,24 +46,29 @@ typedef struct menu_item {
    void *data;
 } menu_item_t;
 
-typedef struct menu_list {
+typedef struct {
    uint8_t size;
    uint8_t action_item_num;
    void (* configure_settings)();
    menu_item_t menu[];
 } menu_list_t;
 
-typedef struct point {
+typedef struct {
    uint8_t x;
    uint8_t y;
 } point_t;
+
+typedef struct {
+   point_t start_point;
+   point_t end_point;
+} winning_data_t;
 
 typedef struct {
    uint8_t **marked_fld;
    uint8_t **own_fld;
 } ai_data_t;
 
-typedef struct player_ent {
+typedef struct {
    const struct player_func_list *func_list;
    char name[MAX_OUTPUT_BUF_LEN];
    void *player_ctx;

@@ -22,7 +22,7 @@ static uint8_t check_vertical(uint8_t col) {
       main_field[0][col] == main_field[2][col];
 }
 
-static uint8_t check_diagonal(short main_diag) {
+static uint8_t check_diagonal(uint8_t main_diag) {
    return main_field[0][main_diag ? 0 : 2] == main_field[1][1] &&
       main_field[0][main_diag ? 0 : 2] == main_field[2][main_diag ? 2 : 0];
 }
@@ -82,4 +82,42 @@ uint8_t check_end_conditions() {
       }
    }
    return is_empty ? GS_ONGOING : GS_DRAW;
+}
+
+uint8_t get_winning_cond(void *data) {
+   winning_data_t *winning_data = (winning_data_t *) data;
+
+   if (check_diagonal(TRUE)) {
+      winning_data->start_point.x = 1;
+      winning_data->start_point.y = 1;
+      winning_data->end_point.x = 3;
+      winning_data->end_point.y = 3;
+      return TRUE;
+   }
+   else if (check_diagonal(FALSE)) {
+      winning_data->start_point.x = 1;
+      winning_data->start_point.y = 3;
+      winning_data->end_point.x = 3;
+      winning_data->end_point.y = 1;
+      return TRUE;      
+   }
+   else {
+      for (uint8_t i = 0; i < HEIGHT_SIZE; i++) {
+         if (check_vertical(i)) {
+            winning_data->start_point.x = 1;
+            winning_data->start_point.y = i + 1;
+            winning_data->end_point.x = 3;
+            winning_data->end_point.y = i + 1;
+            return TRUE;
+         }
+         if (check_horizontal(i)) {
+            winning_data->start_point.x = i + 1;
+            winning_data->start_point.y = 1;
+            winning_data->end_point.x = i + 1;
+            winning_data->end_point.y = 3;
+            return TRUE;
+         }
+      }
+   }
+   return FALSE;
 }
