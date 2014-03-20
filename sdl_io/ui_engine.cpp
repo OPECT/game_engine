@@ -196,7 +196,7 @@ void UI_engine::show_menu(vector<string> &list) {
 }
 
 void UI_engine::show_field(uint8_t **field, point_t const *size, vector<string> figures) {
-   uint8_t init_hor_offset = 150, init_vert_offset = 40;
+   uint8_t init_hor_offset = 120, init_vert_offset = 40;
    SDL_Surface *figure;
 
    apply_surface(0, 0, background, screen, NULL);
